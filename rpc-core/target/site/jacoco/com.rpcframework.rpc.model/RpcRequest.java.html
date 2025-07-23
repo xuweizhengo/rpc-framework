@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RpcRequest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">RPC Core</a> &gt; <a href="index.source.html" class="el_package">com.rpcframework.rpc.model</a> &gt; <span class="el_source">RpcRequest.java</span></div><h1>RpcRequest.java</h1><pre class="source lang-java linenums">package com.rpcframework.rpc.model;
+
+import java.io.Serializable;
+import java.util.Arrays;
+
+/**
+ * RPC请求模型
+ * 
+ * &lt;p&gt;封装RPC调用的所有信息，包括目标服务、方法、参数等。
+ * 
+ * @author rpc-framework
+ * @since 1.0.0
+ */
+public class RpcRequest implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * 请求唯一标识，用于请求响应匹配
+     */
+    private String requestId;
+    
+    /**
+     * 目标服务接口全限定名
+     */
+    private String interfaceName;
+    
+    /**
+     * 目标方法名
+     */
+    private String methodName;
+    
+    /**
+     * 方法参数类型数组
+     */
+    private Class&lt;?&gt;[] parameterTypes;
+    
+    /**
+     * 方法参数值数组
+     */
+    private Object[] parameters;
+    
+    /**
+     * 服务版本号，支持服务多版本
+     */
+    private String version;
+    
+    /**
+     * 服务分组，支持服务分组隔离
+     */
+    private String group;
+    
+    /**
+     * 请求超时时间（毫秒）
+     */
+    private long timeout;
+    
+    /**
+     * 请求时间戳
+     */
+    private long timestamp;
+    
+<span class="fc" id="L63">    public RpcRequest() {</span>
+<span class="fc" id="L64">        this.timestamp = System.currentTimeMillis();</span>
+<span class="fc" id="L65">    }</span>
+    
+    public String getRequestId() {
+<span class="fc" id="L68">        return requestId;</span>
+    }
+    
+    public void setRequestId(String requestId) {
+<span class="fc" id="L72">        this.requestId = requestId;</span>
+<span class="fc" id="L73">    }</span>
+    
+    public String getInterfaceName() {
+<span class="fc" id="L76">        return interfaceName;</span>
+    }
+    
+    public void setInterfaceName(String interfaceName) {
+<span class="fc" id="L80">        this.interfaceName = interfaceName;</span>
+<span class="fc" id="L81">    }</span>
+    
+    public String getMethodName() {
+<span class="fc" id="L84">        return methodName;</span>
+    }
+    
+    public void setMethodName(String methodName) {
+<span class="fc" id="L88">        this.methodName = methodName;</span>
+<span class="fc" id="L89">    }</span>
+    
+    public Class&lt;?&gt;[] getParameterTypes() {
+<span class="fc" id="L92">        return parameterTypes;</span>
+    }
+    
+    public void setParameterTypes(Class&lt;?&gt;[] parameterTypes) {
+<span class="fc" id="L96">        this.parameterTypes = parameterTypes;</span>
+<span class="fc" id="L97">    }</span>
+    
+    public Object[] getParameters() {
+<span class="fc" id="L100">        return parameters;</span>
+    }
+    
+    public void setParameters(Object[] parameters) {
+<span class="fc" id="L104">        this.parameters = parameters;</span>
+<span class="fc" id="L105">    }</span>
+    
+    public String getVersion() {
+<span class="fc" id="L108">        return version;</span>
+    }
+    
+    public void setVersion(String version) {
+<span class="fc" id="L112">        this.version = version;</span>
+<span class="fc" id="L113">    }</span>
+    
+    public String getGroup() {
+<span class="fc" id="L116">        return group;</span>
+    }
+    
+    public void setGroup(String group) {
+<span class="fc" id="L120">        this.group = group;</span>
+<span class="fc" id="L121">    }</span>
+    
+    public long getTimeout() {
+<span class="fc" id="L124">        return timeout;</span>
+    }
+    
+    public void setTimeout(long timeout) {
+<span class="fc" id="L128">        this.timeout = timeout;</span>
+<span class="fc" id="L129">    }</span>
+    
+    public long getTimestamp() {
+<span class="fc" id="L132">        return timestamp;</span>
+    }
+    
+    public void setTimestamp(long timestamp) {
+<span class="nc" id="L136">        this.timestamp = timestamp;</span>
+<span class="nc" id="L137">    }</span>
+    
+    /**
+     * 获取服务的唯一标识
+     * 格式：interfaceName:version:group
+     * 
+     * @return 服务唯一标识
+     */
+    public String getServiceKey() {
+<span class="fc" id="L146">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L147">        sb.append(interfaceName);</span>
+<span class="fc bfc" id="L148" title="All 4 branches covered.">        if (version != null &amp;&amp; !version.isEmpty()) {</span>
+<span class="fc" id="L149">            sb.append(&quot;:&quot;).append(version);</span>
+        }
+<span class="pc bpc" id="L151" title="1 of 4 branches missed.">        if (group != null &amp;&amp; !group.isEmpty()) {</span>
+<span class="fc" id="L152">            sb.append(&quot;:&quot;).append(group);</span>
+        }
+<span class="fc" id="L154">        return sb.toString();</span>
+    }
+    
+    /**
+     * 获取方法的唯一标识
+     * 格式：methodName(paramType1,paramType2,...)
+     * 
+     * @return 方法唯一标识
+     */
+    public String getMethodKey() {
+<span class="fc" id="L164">        StringBuilder sb = new StringBuilder();</span>
+<span class="fc" id="L165">        sb.append(methodName).append(&quot;(&quot;);</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (parameterTypes != null) {</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">            for (int i = 0; i &lt; parameterTypes.length; i++) {</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">                if (i &gt; 0) {</span>
+<span class="fc" id="L169">                    sb.append(&quot;,&quot;);</span>
+                }
+<span class="fc" id="L171">                sb.append(parameterTypes[i].getName());</span>
+            }
+        }
+<span class="fc" id="L174">        sb.append(&quot;)&quot;);</span>
+<span class="fc" id="L175">        return sb.toString();</span>
+    }
+    
+    @Override
+    public String toString() {
+<span class="fc" id="L180">        return &quot;RpcRequest{&quot; +</span>
+                &quot;requestId='&quot; + requestId + '\'' +
+                &quot;, interfaceName='&quot; + interfaceName + '\'' +
+                &quot;, methodName='&quot; + methodName + '\'' +
+<span class="fc" id="L184">                &quot;, parameterTypes=&quot; + Arrays.toString(parameterTypes) +</span>
+<span class="fc" id="L185">                &quot;, parameters=&quot; + Arrays.toString(parameters) +</span>
+                &quot;, version='&quot; + version + '\'' +
+                &quot;, group='&quot; + group + '\'' +
+                &quot;, timeout=&quot; + timeout +
+                &quot;, timestamp=&quot; + timestamp +
+                '}';
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L196" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+        
+<span class="fc" id="L198">        RpcRequest that = (RpcRequest) o;</span>
+        
+<span class="pc bpc" id="L200" title="1 of 4 branches missed.">        return requestId != null ? requestId.equals(that.requestId) : that.requestId == null;</span>
+    }
+    
+    @Override
+    public int hashCode() {
+<span class="fc bfc" id="L205" title="All 2 branches covered.">        return requestId != null ? requestId.hashCode() : 0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
